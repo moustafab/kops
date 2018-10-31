@@ -278,6 +278,7 @@ func (b *NetworkModelBuilder) Build(c *fi.ModelBuilderContext) error {
 
 		var ngw *awstasks.NatGateway
 		var in *awstasks.Instance
+		var vgw *awstasks.VpnGateway
 		if egress != "" {
 			if strings.HasPrefix(egress, "nat-") {
 
@@ -306,8 +307,19 @@ func (b *NetworkModelBuilder) Build(c *fi.ModelBuilderContext) error {
 
 				c.AddTask(in)
 
+			} else if strings.HasPrefix(egress, "vgw-") {
+
+				vgw = &awstasks.VpnGateway{
+					Name:      s(egress),
+					Lifecycle: b.Lifecycle,
+					ID:        s(egress),
+					Tags:      nil, // We don't support tagging shared Vpn Gateways
+				}
+
+				c.AddTask(vgw)
+
 			} else {
-				return fmt.Errorf("kops currently only supports re-use of either NAT EC2 Instances or NAT Gateways. We will support more eventually! Please see https://github.com/kubernetes/kops/issues/1530")
+				return fmt.Errorf("kops currently only supports re-use of either NAT EC2 Instances, NAT Gateways, or Virtual Private Gateways. We will support more eventually! Please see https://github.com/kubernetes/kops/issues/1530")
 			}
 
 		} else {
