@@ -562,8 +562,8 @@ func ValidateCluster(c *kops.Cluster, strict bool) *field.Error {
 	{
 		for i, s := range c.Spec.Subnets {
 			fieldSubnet := fieldSpec.Child("Subnets").Index(i)
-			if s.Egress != "" && !strings.HasPrefix(s.Egress, "nat-") && !strings.HasPrefix(s.Egress, "i-") {
-				return field.Invalid(fieldSubnet.Child("Egress"), s.Egress, "egress must be of type NAT Gateway or NAT EC2 Instance")
+			if s.Egress != "" && !strings.HasPrefix(s.Egress, "nat-") && !strings.HasPrefix(s.Egress, "i-") && !strings.HasPrefix(s.Egress, "vgw-") {
+				return field.Invalid(fieldSubnet.Child("Egress"), s.Egress, "egress must be of type NAT Gateway, NAT EC2 Instance, or a Virtual Private Gateway")
 			}
 			if s.Egress != "" && !(s.Type == "Private") {
 				return field.Invalid(fieldSubnet.Child("Egress"), s.Egress, "egress can only be specified for Private subnets")
