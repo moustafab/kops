@@ -57,6 +57,8 @@ type MockEC2 struct {
 
 	NatGateways map[string]*ec2.NatGateway
 
+	VpnGateways map[string]*ec2.VpnGateway
+
 	idsMutex sync.Mutex
 	ids      map[string]*idAllocator
 }
@@ -97,6 +99,9 @@ func (m *MockEC2) All() map[string]interface{} {
 		all[id] = o
 	}
 	for id, o := range m.NatGateways {
+		all[id] = o
+	}
+	for id, o := range m.VpnGateways {
 		all[id] = o
 	}
 

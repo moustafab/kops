@@ -122,16 +122,6 @@ func (m *MockEC2) AttachVolumeRequest(*ec2.AttachVolumeInput) (*request.Request,
 	panic("Not implemented")
 }
 
-func (m *MockEC2) AttachVpnGateway(*ec2.AttachVpnGatewayInput) (*ec2.AttachVpnGatewayOutput, error) {
-	panic("Not implemented")
-}
-func (m *MockEC2) AttachVpnGatewayWithContext(aws.Context, *ec2.AttachVpnGatewayInput, ...request.Option) (*ec2.AttachVpnGatewayOutput, error) {
-	panic("Not implemented")
-}
-func (m *MockEC2) AttachVpnGatewayRequest(*ec2.AttachVpnGatewayInput) (*request.Request, *ec2.AttachVpnGatewayOutput) {
-	panic("Not implemented")
-}
-
 func (m *MockEC2) BundleInstance(*ec2.BundleInstanceInput) (*ec2.BundleInstanceOutput, error) {
 	panic("Not implemented")
 }
@@ -432,16 +422,6 @@ func (m *MockEC2) CreateVpnConnectionRouteRequest(*ec2.CreateVpnConnectionRouteI
 	panic("Not implemented")
 }
 
-func (m *MockEC2) CreateVpnGateway(*ec2.CreateVpnGatewayInput) (*ec2.CreateVpnGatewayOutput, error) {
-	panic("Not implemented")
-}
-func (m *MockEC2) CreateVpnGatewayWithContext(aws.Context, *ec2.CreateVpnGatewayInput, ...request.Option) (*ec2.CreateVpnGatewayOutput, error) {
-	panic("Not implemented")
-}
-func (m *MockEC2) CreateVpnGatewayRequest(*ec2.CreateVpnGatewayInput) (*request.Request, *ec2.CreateVpnGatewayOutput) {
-	panic("Not implemented")
-}
-
 func (m *MockEC2) DeleteCustomerGateway(*ec2.DeleteCustomerGatewayInput) (*ec2.DeleteCustomerGatewayOutput, error) {
 	panic("Not implemented")
 }
@@ -598,16 +578,6 @@ func (m *MockEC2) DeleteVpnConnectionRouteWithContext(aws.Context, *ec2.DeleteVp
 	panic("Not implemented")
 }
 func (m *MockEC2) DeleteVpnConnectionRouteRequest(*ec2.DeleteVpnConnectionRouteInput) (*request.Request, *ec2.DeleteVpnConnectionRouteOutput) {
-	panic("Not implemented")
-}
-
-func (m *MockEC2) DeleteVpnGateway(*ec2.DeleteVpnGatewayInput) (*ec2.DeleteVpnGatewayOutput, error) {
-	panic("Not implemented")
-}
-func (m *MockEC2) DeleteVpnGatewayWithContext(aws.Context, *ec2.DeleteVpnGatewayInput, ...request.Option) (*ec2.DeleteVpnGatewayOutput, error) {
-	panic("Not implemented")
-}
-func (m *MockEC2) DeleteVpnGatewayRequest(*ec2.DeleteVpnGatewayInput) (*request.Request, *ec2.DeleteVpnGatewayOutput) {
 	panic("Not implemented")
 }
 
@@ -1163,16 +1133,6 @@ func (m *MockEC2) DescribeVpnConnectionsRequest(*ec2.DescribeVpnConnectionsInput
 	panic("Not implemented")
 }
 
-func (m *MockEC2) DescribeVpnGateways(*ec2.DescribeVpnGatewaysInput) (*ec2.DescribeVpnGatewaysOutput, error) {
-	panic("Not implemented")
-}
-func (m *MockEC2) DescribeVpnGatewaysWithContext(aws.Context, *ec2.DescribeVpnGatewaysInput, ...request.Option) (*ec2.DescribeVpnGatewaysOutput, error) {
-	panic("Not implemented")
-}
-func (m *MockEC2) DescribeVpnGatewaysRequest(*ec2.DescribeVpnGatewaysInput) (*request.Request, *ec2.DescribeVpnGatewaysOutput) {
-	panic("Not implemented")
-}
-
 func (m *MockEC2) DetachClassicLinkVpc(*ec2.DetachClassicLinkVpcInput) (*ec2.DetachClassicLinkVpcOutput, error) {
 	panic("Not implemented")
 }
@@ -1200,16 +1160,6 @@ func (m *MockEC2) DetachVolumeWithContext(aws.Context, *ec2.DetachVolumeInput, .
 	panic("Not implemented")
 }
 func (m *MockEC2) DetachVolumeRequest(*ec2.DetachVolumeInput) (*request.Request, *ec2.VolumeAttachment) {
-	panic("Not implemented")
-}
-
-func (m *MockEC2) DetachVpnGateway(*ec2.DetachVpnGatewayInput) (*ec2.DetachVpnGatewayOutput, error) {
-	panic("Not implemented")
-}
-func (m *MockEC2) DetachVpnGatewayWithContext(aws.Context, *ec2.DetachVpnGatewayInput, ...request.Option) (*ec2.DetachVpnGatewayOutput, error) {
-	panic("Not implemented")
-}
-func (m *MockEC2) DetachVpnGatewayRequest(*ec2.DetachVpnGatewayInput) (*request.Request, *ec2.DetachVpnGatewayOutput) {
 	panic("Not implemented")
 }
 

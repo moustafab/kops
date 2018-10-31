@@ -234,7 +234,7 @@ type cloudformationInternetGateway struct {
 	Tags []cloudformationTag `json:"Tags,omitempty"`
 }
 
-type cloudformationVpcGatewayAttachment struct {
+type cloudformationVpcInternetGatewayAttachment struct {
 	VpcId             *cloudformation.Literal `json:"VpcId,omitempty"`
 	InternetGatewayId *cloudformation.Literal `json:"InternetGatewayId,omitempty"`
 }
@@ -278,7 +278,7 @@ func (_ *InternetGateway) RenderCloudformation(t *cloudformation.CloudformationT
 	}
 
 	{
-		cf := &cloudformationVpcGatewayAttachment{
+		cf := &cloudformationVpcInternetGatewayAttachment{
 			VpcId:             e.VPC.CloudformationLink(),
 			InternetGatewayId: e.CloudformationLink(),
 		}
