@@ -86,9 +86,7 @@ func TestSharedVpnGatewayDoesNotRename(t *testing.T) {
 		}
 		vgw1 := &VpnGateway{
 			Name: s("vgw1"),
-			VPC:  vpc1,
 			ID:   vpnGateway.VpnGateway.VpnGatewayId,
-			Tags: make(map[string]string),
 		}
 
 		return map[string]fi.Task{

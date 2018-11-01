@@ -31,11 +31,7 @@ import (
 type VpnGateway struct {
 	Name      *string
 	Lifecycle *fi.Lifecycle
-
-	ID  *string
-	VPC *VPC
-	// Tags is a map of aws tags that are added to the VpnGateway
-	Tags map[string]string
+	ID        *string
 }
 
 // Vpn Gateways are always shared
@@ -67,17 +63,10 @@ func (e *VpnGateway) Find(c *fi.Context) (*VpnGateway, error) {
 
 	request := &ec2.DescribeVpnGatewaysInput{}
 
-	if fi.StringValue(e.VPC.ID) == "" {
-		return nil, fmt.Errorf("VPC ID is required when using VpnGateway")
+	if e.ID == nil {
+		return nil, fmt.Errorf("must have VpnGateway id to use vpn gateway")
 	}
-
-	request.Filters = []*ec2.Filter{awsup.NewEC2Filter("attachment.vpc-id", *e.VPC.ID)}
-
-	if e.ID != nil {
-		request.VpnGatewayIds = []*string{e.ID}
-	} else {
-		request.Filters = cloud.BuildFilters(e.Name)
-	}
+	request.VpnGatewayIds = []*string{e.ID}
 
 	vgw, err := findVpnGateway(cloud, request)
 	if err != nil {
@@ -87,22 +76,15 @@ func (e *VpnGateway) Find(c *fi.Context) (*VpnGateway, error) {
 		return nil, nil
 	}
 	actual := &VpnGateway{
-		ID:   vgw.VpnGatewayId,
-		Name: findNameTag(vgw.Tags),
-		Tags: intersectTags(vgw.Tags, e.Tags),
+		ID: vgw.VpnGatewayId,
 	}
 
 	glog.V(2).Infof("found matching VpnGateway %q", *actual.ID)
-
-	for _, attachment := range vgw.VpcAttachments {
-		actual.VPC = &VPC{ID: attachment.VpcId}
-	}
 
 	// Prevent spurious comparison failures
 	actual.Lifecycle = e.Lifecycle
 	actual.Name = e.Name
 	e.ID = actual.ID
-	actual.Tags = e.Tags
 
 	return actual, nil
 }
@@ -120,9 +102,6 @@ func (s *VpnGateway) CheckChanges(a, e, changes *VpnGateway) error {
 		if changes.ID != nil {
 			return fi.CannotChangeField("ID")
 		}
-		if changes.Tags != nil {
-			return fi.CannotChangeField("Tags")
-		}
 	}
 
 	return nil
@@ -133,19 +112,9 @@ func (_ *VpnGateway) RenderAWS(t *awsup.AWSAPITarget, a, e, changes *VpnGateway)
 	if a == nil {
 		return fmt.Errorf("error cannot create VpnGateway")
 	}
-
-	if changes != nil && changes.VPC != nil {
-		glog.V(2).Infof("Creating VpcAttachment")
-
-		attachRequest := &ec2.AttachVpnGatewayInput{
-			VpcId:        e.VPC.ID,
-			VpnGatewayId: e.ID,
-		}
-
-		_, err := t.Cloud.EC2().AttachVpnGateway(attachRequest)
-		if err != nil {
-			return fmt.Errorf("error attaching VpnGateway to VPC: %v", err)
-		}
+	// can't make changes
+	if changes != nil {
+		return fmt.Errorf("can't find that VpnGateway, %p does not exist", changes.ID)
 	}
 
 	return nil
@@ -161,17 +130,12 @@ func (_ *VpnGateway) RenderTerraform(t *terraform.TerraformTarget, a, e, changes
 	// But ... attempt to discover the ID so TerraformLink works
 	if e.ID == nil {
 		request := &ec2.DescribeVpnGatewaysInput{}
-		vpcID := fi.StringValue(e.VPC.ID)
-		if vpcID == "" {
-			return fmt.Errorf("VPC ID is required when VpnGateway is shared")
-		}
-		request.Filters = []*ec2.Filter{awsup.NewEC2Filter("attachment.vpc-id", vpcID)}
 		vgw, err := findVpnGateway(t.Cloud.(awsup.AWSCloud), request)
 		if err != nil {
 			return err
 		}
 		if vgw == nil {
-			glog.Warningf("Cannot find virtual gateway for VPC %q", vpcID)
+			glog.Warningf("Cannot find virtual gateway %p", changes.ID)
 		} else {
 			e.ID = vgw.VpnGatewayId
 		}
@@ -182,7 +146,7 @@ func (_ *VpnGateway) RenderTerraform(t *terraform.TerraformTarget, a, e, changes
 
 func (e *VpnGateway) TerraformLink() *terraform.Literal {
 	if e.ID == nil {
-		glog.Fatalf("ID must be set, if VpnGateway is shared: %s", e)
+		glog.Fatalf("ID must be set, if VpnGateway is shared: %p", e)
 	}
 
 	glog.V(4).Infof("reusing existing VpnGateway with id %q", *e.ID)
@@ -204,17 +168,12 @@ func (_ *VpnGateway) RenderCloudformation(t *cloudformation.CloudformationTarget
 	// But ... attempt to discover the ID so CloudformationLink works
 	if e.ID == nil {
 		request := &ec2.DescribeVpnGatewaysInput{}
-		vpcID := fi.StringValue(e.VPC.ID)
-		if vpcID == "" {
-			return fmt.Errorf("VPC ID is required when VpnGateway is shared")
-		}
-		request.Filters = []*ec2.Filter{awsup.NewEC2Filter("attachment.vpc-id", vpcID)}
 		vgw, err := findVpnGateway(t.Cloud.(awsup.AWSCloud), request)
 		if err != nil {
 			return err
 		}
 		if vgw == nil {
-			glog.Warningf("Cannot find vpn gateway for VPC %q", vpcID)
+			glog.Warningf("Cannot find virtual gateway %d", changes.ID)
 		} else {
 			e.ID = vgw.VpnGatewayId
 		}

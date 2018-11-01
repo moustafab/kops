@@ -313,7 +313,6 @@ func (b *NetworkModelBuilder) Build(c *fi.ModelBuilderContext) error {
 					Name:      s(egress),
 					Lifecycle: b.Lifecycle,
 					ID:        s(egress),
-					Tags:      nil, // We don't support tagging shared Vpn Gateways
 				}
 
 				c.AddTask(vgw)
